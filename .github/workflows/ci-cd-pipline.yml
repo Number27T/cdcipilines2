@@ -101,7 +101,7 @@ jobs:
                   {
                     "to": [
                       {
-                        "email": "recipient@example.com"
+                        "email": "gbtdu2@gmail.com"
                       }
                     ],
                     "subject": "Build or Deployment Failed"
