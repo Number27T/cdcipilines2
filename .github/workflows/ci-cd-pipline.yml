@@ -89,31 +89,31 @@ jobs:
     needs: [build, test, deploy]
     if: failure()
 
-   steps:
-    - name: Send failure email
-      run: |
-        echo "Sending failure email..."
-        curl -X POST https://api.sendgrid.com/v3/mail/send \
-          -H "Authorization: Bearer ${{ secrets.SENDGRID_API_KEY }}" \
-          -H "Content-Type: application/json" \
-          -d '{
-                "personalizations": [
-                  {
-                    "to": [
-                      {
-                        "email": "gbtdu2@gmail.com"
-                      }
-                    ],
-                    "subject": "Build or Deployment Failed"
-                  }
-                ],
-                "from": {
-                  "email": "gbtdu2@gmail.com"
-                },
-                "content": [
-                  {
-                    "type": "text/plain",
-                    "value": "A build or deployment has failed on the CI/CD pipeline!"
-                  }
-                ]
-              }'
+    steps:
+      - name: Send failure email
+        run: |
+          echo "Sending failure email..."
+          curl -X POST https://api.sendgrid.com/v3/mail/send \
+            -H "Authorization: Bearer ${{ secrets.SENDGRID_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+                  "personalizations": [
+                    {
+                      "to": [
+                        {
+                          "email": "gbtdu2@gmail.com"
+                        }
+                      ],
+                      "subject": "Build or Deployment Failed"
+                    }
+                  ],
+                  "from": {
+                    "email": "gbtdu2@gmail.com"
+                  },
+                  "content": [
+                    {
+                      "type": "text/plain",
+                      "value": "A build or deployment has failed on the CI/CD pipeline!"
+                    }
+                  ]
+                }'
