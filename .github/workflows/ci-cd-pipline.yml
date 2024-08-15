@@ -73,7 +73,7 @@ jobs:
         with:
           azcliversion: '2.46.0'
 
-      - name: 20232168@ctucareer.co.za
+      - name: Azure login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
