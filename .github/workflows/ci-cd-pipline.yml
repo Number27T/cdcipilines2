@@ -31,6 +31,11 @@ jobs:
       - name: Publish artifacts
         run: dotnet publish --configuration Release --no-build --output ./artifacts
 
+      - name: Zip artifacts
+        run: |
+          cd ./artifacts
+          zip -r myapp.zip .
+
   test:
     name: Test
     runs-on: ubuntu-latest
