@@ -1,0 +1,82 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build the solution
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Publish artifacts
+        run: dotnet publish --configuration Release --no-build --output ./artifacts
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Run tests
+        run: dotnet test --no-restore --collect:"XPlat Code Coverage"
+
+      - name: Run code analysis
+        run: dotnet tool install --global dotnet-format && dotnet format --verify-no-changes
+
+  deploy:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy application
+        run: |
+          echo "Deploying to Staging environment..."
+          # Add your deployment script or command here
+          # For example, Azure Web App deployment
+          az webapp deployment source config-zip --resource-group myResourceGroup --name myWebApp --src ./artifacts/myapp.zip
+
+  notify:
+    name: Send Notification
+    runs-on: ubuntu-latest
+    needs: [build, test, deploy]
+    if: failure()
+
+    steps:
+      - name: Send failure notification
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"A build or deployment has failed on the CI/CD pipeline!"}' https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX
