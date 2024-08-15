@@ -92,4 +92,4 @@ jobs:
     steps:
       - name: Send failure notification
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"A build or deployment has failed on the CI/CD pipeline!"}' https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"A build or deployment has failed on the CI/CD pipeline!"}' ${{ secrets.SLACK_WEBHOOK_URL }}
