@@ -60,7 +60,7 @@ jobs:
         run: dotnet tool install --global dotnet-format && dotnet format --verify-no-changes
 
   deploy:
-    name: Deploy to Staging
+    name: Deploy to GitHub Pages
     runs-on: ubuntu-latest
     needs: test
 
@@ -68,20 +68,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Azure CLI
-        uses: azure/cli-action@v1
+      - name: Set up Node.js (required for GitHub Pages action)
+        uses: actions/setup-node@v3
         with:
-          azcliversion: '2.46.0'
+          node-version: '16'
 
-      - name: Azure login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Deploy application
+      - name: Build
         run: |
-          echo "Deploying to Staging environment..."
-          az webapp deploy --resource-group myResourceGroup --name myWebApp --src ./artifacts/myapp.zip
+          # Run any build commands if needed
+          echo "No additional build steps required for GitHub Pages."
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./artifacts  # Set this to the directory where your built files are
 
   notify:
     name: Send Notification
